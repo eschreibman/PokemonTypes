@@ -28,6 +28,7 @@ class Type:
 		self.color = color
 		self.weakAgainstMe = []
 		self.strongAgainstMe = []
+		self.noEffectAgainstMe = []
 		self.notEffectiveAgainst = []
 		self.superEffectiveAgainst = []
 
@@ -40,6 +41,11 @@ class Type:
 	def add_strongAgainstMe(self, strongTypes):
 		for strongType in strongTypes:
 			self.strongAgainstMe.append(strongType)
+
+	#takes an array of Types
+	def add_noEffectAgainstMe(self, noEfTypes):
+		for noEffect in noEfTypes:
+			self.noEffectAgainstMe.append(noEffect)
 
 	#takes an array of Types
 	def add_notEffectiveAgainst(self, neaTypes):
@@ -72,64 +78,84 @@ class Type:
 			print finalstring + " are weak against " + self.color + self.name + bcolors.ENDC
 
 	def printstrongAgainstMe(self):
-			finalstring = ""
-			length = len(self.strongAgainstMe)
-			if(length > 0):
-				for t in range(length):
-					#we're at the end and only need a space
-					if (t + 1 == length):
-						comma = ""
-					#at the second to end and need an and
-					elif (t + 2 == length):
-						if (length > 2):
-							comma = ", and "
-						else:
-							comma = " and "
-					#else comma
+		finalstring = ""
+		length = len(self.strongAgainstMe)
+		if(length > 0):
+			for t in range(length):
+				#we're at the end and only need a space
+				if (t + 1 == length):
+					comma = ""
+				#at the second to end and need an and
+				elif (t + 2 == length):
+					if (length > 2):
+						comma = ", and "
 					else:
-						comma = ", "
-					finalstring += (self.strongAgainstMe[t].color + str(self.strongAgainstMe[t]) + bcolors.ENDC + comma)
-				print finalstring + " are strong against " + self.color + self.name + bcolors.ENDC
+						comma = " and "
+				#else comma
+				else:
+					comma = ", "
+				finalstring += (self.strongAgainstMe[t].color + str(self.strongAgainstMe[t]) + bcolors.ENDC + comma)
+			print finalstring + " are strong against " + self.color + self.name + bcolors.ENDC
+
+	def printNoEffectonMe(self):
+		finalstring = ""
+		length = len(self.noEffectAgainstMe)
+		if (length > 0):
+			for t in range(length):
+				#we're at the end and only need a space
+				if (t + 1 == length):
+					comma = ""
+				#at the second to end and need an and
+				elif (t + 2 == length):
+					if (length > 2):
+						comma = ", and "
+					else:
+						comma = " and "
+				#else comma
+				else:
+					comma = ", "
+				finalstring += (self.noEffectAgainstMe[t].color + str(self.noEffectAgainstMe[t]) + bcolors.ENDC + comma)
+			print finalstring + " have no effect on " + self.color + self.name + bcolors.ENDC
 
 	def printnotEffectiveAgainst(self):
-			finalstring = ""
-			length = len(self.notEffectiveAgainst)
-			if(length > 0):
-				for t in range(length):
-					#we're at the end and only need a space
-					if (t + 1 == length):
-						comma = ""
-					#at the second to end and need an and
-					elif (t + 2 == length):
-						if (length > 2):
-							comma = ", and "
-						else:
-							comma = " and "
-					#else comma
+		finalstring = ""
+		length = len(self.notEffectiveAgainst)
+		if(length > 0):
+			for t in range(length):
+				#we're at the end and only need a space
+				if (t + 1 == length):
+					comma = ""
+				#at the second to end and need an and
+				elif (t + 2 == length):
+					if (length > 2):
+						comma = ", and "
 					else:
-						comma = ", "
-					finalstring += (self.notEffectiveAgainst[t].color + str(self.notEffectiveAgainst[t]) + bcolors.ENDC + comma)
-				print self.color + self.name + bcolors.ENDC + " is not very effective against " +  finalstring + bcolors.ENDC
+						comma = " and "
+				#else comma
+				else:
+					comma = ", "
+				finalstring += (self.notEffectiveAgainst[t].color + str(self.notEffectiveAgainst[t]) + bcolors.ENDC + comma)
+			print self.color + self.name + bcolors.ENDC + " is not very effective against " +  finalstring + bcolors.ENDC
 	
 	def printsuperEffectiveAgainst(self):
-			finalstring = ""
-			length = len(self.superEffectiveAgainst)
-			if(length > 0):
-				for t in range(length):
-					#we're at the end and only need a space
-					if (t + 1 == length):
-						comma = ""
-					#at the second to end and need an and
-					elif (t + 2 == length):
-						if (length > 2):
-							comma = ", and "
-						else:
-							comma = " and "
-					#else comma
+		finalstring = ""
+		length = len(self.superEffectiveAgainst)
+		if(length > 0):
+			for t in range(length):
+				#we're at the end and only need a space
+				if (t + 1 == length):
+					comma = ""
+				#at the second to end and need an and
+				elif (t + 2 == length):
+					if (length > 2):
+						comma = ", and "
 					else:
-						comma = ", "
-					finalstring += (self.superEffectiveAgainst[t].color + str(self.superEffectiveAgainst[t]) + bcolors.ENDC + comma)
-				print self.color + self.name + bcolors.ENDC + " is super effective against " +  finalstring + bcolors.ENDC
+						comma = " and "
+				#else comma
+				else:
+					comma = ", "
+				finalstring += (self.superEffectiveAgainst[t].color + str(self.superEffectiveAgainst[t]) + bcolors.ENDC + comma)
+			print self.color + self.name + bcolors.ENDC + " is super effective against " +  finalstring + bcolors.ENDC
 
 
 	#called if you try to print a Type
@@ -165,7 +191,7 @@ steel = Type("steel", bcolors.GRAY)
 allTypes = [normal, fire, water, electric, grass, ice, fighting, poison, ground, flying, psychic, bug, rock, ghost, dragon, dark, steel]
 
 def setWeakAgainstMe():
-	normal.add_weakAgainstMe([ghost])
+	normal.add_noEffectAgainstMe([ghost])
 	fire.add_weakAgainstMe([fire, grass, ice, bug, steel])
 	water.add_weakAgainstMe([fire, water, ice, steel])
 	electric.add_weakAgainstMe([electric, flying, steel])
@@ -173,15 +199,20 @@ def setWeakAgainstMe():
 	ice.add_weakAgainstMe([ice])
 	fighting.add_weakAgainstMe([bug, rock, dark])
 	poison.add_weakAgainstMe([grass, fighting, poison, bug])
-	ground.add_weakAgainstMe([electric, poison, rock])
-	flying.add_weakAgainstMe([grass, fighting, ground, bug])
+	ground.add_weakAgainstMe([poison, rock])
+	ground.add_noEffectAgainstMe([electric])
+	flying.add_weakAgainstMe([grass, fighting, bug])
+	flying.add_noEffectAgainstMe([ground])
 	psychic.add_weakAgainstMe([fighting, psychic])
 	bug.add_weakAgainstMe([grass, fighting, ground])
 	rock.add_weakAgainstMe([normal, fire, poison, flying])
-	ghost.add_weakAgainstMe([normal, fighting, poison, bug])
+	ghost.add_weakAgainstMe([poison, bug])
+	ghost.add_noEffectAgainstMe([normal, fighting])
 	dragon.add_weakAgainstMe([fire, water, electric, grass])
-	dark.add_weakAgainstMe([psychic, ghost, dark])
-	steel.add_weakAgainstMe([normal, grass, ice, poison, flying, psychic, bug, rock, dragon, steel])
+	dark.add_weakAgainstMe([ghost, dark])
+	dark.add_noEffectAgainstMe([psychic])
+	steel.add_weakAgainstMe([normal, grass, ice, flying, psychic, bug, rock, dragon, steel])
+	steel.add_noEffectAgainstMe([poison])
 
 def setStrongAgainstMe():
 	normal.add_strongAgainstMe([fighting])
@@ -245,32 +276,71 @@ def populateAllData():
 	setNotEffectiveAgainst()
 	setSuperEffectiveAgainst()
 
+#parses the user string
+#searches for types of either one or two words
+#returns an array where the first element in the number of correct words
+#and the following elements are the correct type(s) (if any)
 def searchForType(t):
-	for a in allTypes:
-		if (t == a.name):
-			return a
-	return None
+	#parse the input to see how many words were entered
+	parsedInput = t.split(" ")
+	lenInput = len(parsedInput)
 
+	if(lenInput == 1):
+		print "You entered one word: " + parsedInput[0]
+		#see if the type entered matches a single name type
+		for a in allTypes:
+			if (str(parsedInput[0]) == a.name):
+				return [1, a]
+	elif (lenInput == 2):
+		print "You entered two words: " + parsedInput[0] + " and " + parsedInput[1]
+		for a in allTypes:
+			if (str(parsedInput[0]) == a.name):
+				for b in allTypes:
+					if(str(parsedInput[1]) == b.name):
+						return [2, a, b]
+				print "Your second word, " + parsedInput[1] + ", is not a type"
+				return [0]
+		print "Your first word, " + parsedInput[0] + ", is not a type"
+	else:
+		print "You did not enter one or two types. You entered " + str(lenInput) + " types, words, or space."
+	return [0]
 
+#printing for single types
 def printAllData(someType):
 	print "\n"
+	someType.printNoEffectonMe()
 	someType.printweakAgainstMe()
 	someType.printstrongAgainstMe()
 	someType.printnotEffectiveAgainst()
 	someType.printsuperEffectiveAgainst()
 	print "\n"
 
+#printing for double types
+def printDoubleType(typeOne, typeTwo):
+	print "\n"
+	typeOne.printNoEffectonMe()
+	typeOne.printweakAgainstMe()
+	typeOne.printstrongAgainstMe()
+	typeTwo.printNoEffectonMe()
+	typeTwo.printweakAgainstMe()
+	typeTwo.printstrongAgainstMe()
+	print "\n"
+
 #good old main
 def main():
 	populateAllData()
-	possibleType = raw_input("Enter a Type or 'q' to quit: ")
+	possibleType = raw_input("Enter a Type or Types (in lower case, separated by spaces) or 'q' to quit: ")
 	while(str(possibleType) != "q"):
 		userType = searchForType(possibleType)
-		if(userType != None):
-			printAllData(userType)
-			possibleType = raw_input("Enter a Type or 'q' to quit: ")
+		#print "user type: " + str(userType)
+		if(userType[0] == 1):
+			printAllData(userType[1])
+			possibleType = raw_input("Enter a Type or Types (in lower case, separated by spaces) or 'q' to quit: ")
+		elif(userType[0] == 2):
+			printDoubleType(userType[1], userType[2])
+			possibleType = raw_input("Enter a Type or Types (in lower case, separated by spaces) or 'q' to quit: ")
 		else:
-			possibleType = raw_input("that was not a type. try again: ")
+			possibleType = raw_input("That was not a found type. Expected format: 'fire' or 'ice water'. Please try again: ")
 
 
 
