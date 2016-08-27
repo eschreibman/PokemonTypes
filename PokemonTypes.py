@@ -1,6 +1,8 @@
 #Eliza Schreibman
 #Main and only file for running the PokemonTypes Program
 
+########################################### BEGIN OF COLORS ############################################
+
 #some font colors I saw how to do this via stack overflow
 class bcolors:
 	RED = '\033[91m' #psycic
@@ -18,6 +20,10 @@ class bcolors:
 	BOLD = '\033[1m' #ghost
 	UNDERLINE = '\033[4m'
 	ENDC = '\033[0m'
+
+############################################ END OF COLORS ############################################
+
+
 
 ############################################ BEGIN OF TYPE ############################################
 #Pokemon types
@@ -58,64 +64,13 @@ class Type:
 			self.superEffectiveAgainst.append(sea)
 
 	def printweakAgainstMe(self):
-		finalstring = ""
-		length = len(self.weakAgainstMe)
-		if (length > 0):
-			for t in range(length):
-				#we're at the end and only need a space
-				if (t + 1 == length):
-					comma = ""
-				#at the second to end and need an and
-				elif (t + 2 == length):
-					if (length > 2):
-						comma = ", and "
-					else:
-						comma = " and "
-				#else comma
-				else:
-					comma = ", "
-				finalstring += (self.weakAgainstMe[t].color + str(self.weakAgainstMe[t]) + bcolors.ENDC + comma)
-			print finalstring + " are weak against " + self.color + self.name + bcolors.ENDC
+		printList(self.weakAgainstMe, " are weak against ", [self])
 
 	def printstrongAgainstMe(self):
-		finalstring = ""
-		length = len(self.strongAgainstMe)
-		if(length > 0):
-			for t in range(length):
-				#we're at the end and only need a space
-				if (t + 1 == length):
-					comma = ""
-				#at the second to end and need an and
-				elif (t + 2 == length):
-					if (length > 2):
-						comma = ", and "
-					else:
-						comma = " and "
-				#else comma
-				else:
-					comma = ", "
-				finalstring += (self.strongAgainstMe[t].color + str(self.strongAgainstMe[t]) + bcolors.ENDC + comma)
-			print finalstring + " are strong against " + self.color + self.name + bcolors.ENDC
+		printList(self.strongAgainstMe, " are strong against ", [self])
 
 	def printNoEffectonMe(self):
-		finalstring = ""
-		length = len(self.noEffectAgainstMe)
-		if (length > 0):
-			for t in range(length):
-				#we're at the end and only need a space
-				if (t + 1 == length):
-					comma = ""
-				#at the second to end and need an and
-				elif (t + 2 == length):
-					if (length > 2):
-						comma = ", and "
-					else:
-						comma = " and "
-				#else comma
-				else:
-					comma = ", "
-				finalstring += (self.noEffectAgainstMe[t].color + str(self.noEffectAgainstMe[t]) + bcolors.ENDC + comma)
-			print finalstring + " have no effect on " + self.color + self.name + bcolors.ENDC
+		printList(self.noEffectAgainstMe, " have no effect on ", [self])
 
 	def printnotEffectiveAgainst(self):
 		finalstring = ""
@@ -167,8 +122,10 @@ class Type:
 		return self.name
 
 
-############################################ END OF TYPE ############################################
+############################################# END OF TYPE #############################################
 
+
+########################################## BEING OF FUNCTIONS ##########################################
 #global array of all types
 allTypes = []
 normal = Type("normal", bcolors.BLACK)
@@ -286,13 +243,13 @@ def searchForType(t):
 	lenInput = len(parsedInput)
 
 	if(lenInput == 1):
-		print "You entered one word: " + parsedInput[0]
+		#print "You entered one word: " + parsedInput[0]
 		#see if the type entered matches a single name type
 		for a in allTypes:
 			if (str(parsedInput[0]) == a.name):
 				return [1, a]
 	elif (lenInput == 2):
-		print "You entered two words: " + parsedInput[0] + " and " + parsedInput[1]
+		#print "You entered two words: " + parsedInput[0] + " and " + parsedInput[1]
 		for a in allTypes:
 			if (str(parsedInput[0]) == a.name):
 				for b in allTypes:
@@ -318,29 +275,72 @@ def printAllData(someType):
 #printing for double types
 def printDoubleType(typeOne, typeTwo):
 	print "\n"
-	typeOne.printNoEffectonMe()
-	typeOne.printweakAgainstMe()
-	typeOne.printstrongAgainstMe()
-	typeTwo.printNoEffectonMe()
-	typeTwo.printweakAgainstMe()
-	typeTwo.printstrongAgainstMe()
+	combinedNoEffectList = typeOne.noEffectAgainstMe + typeTwo.noEffectAgainstMe
+	printList(set(combinedNoEffectList), " have no effect on ", [typeOne, typeTwo])
+	#types that are weak against both types 
+	veryWeakList = set(typeOne.weakAgainstMe) & set(typeTwo.weakAgainstMe)
+	printList(veryWeakList, " are Very weak against ", [typeOne, typeTwo])
+	#logic to find types that are weak, but not very weak, against the double type
+	combinedWeakList = ((set(typeOne.weakAgainstMe) - set(typeTwo.strongAgainstMe)) ^ (set(typeTwo.weakAgainstMe) - set(typeOne.strongAgainstMe)))
+	printList(combinedWeakList, " are weak against ", [typeOne, typeTwo])
+	#types that are strong against both types 
+	veryStrongList = set(typeOne.strongAgainstMe) & set(typeTwo.strongAgainstMe)
+	printList(veryStrongList, " are Very strong against ", [typeOne, typeTwo])
+	#logic to find types that are strong, but not very strong, against the double type
+	combinedStrongList = ((set(typeOne.strongAgainstMe) - set(typeTwo.weakAgainstMe)) ^ (set(typeTwo.strongAgainstMe) - set(typeOne.weakAgainstMe)))
+	printList(combinedStrongList, " are strong against ", [typeOne, typeTwo])
 	print "\n"
+
+# modular list printing
+# parameters: a list of types, a string phrase, an array of one or two types
+def printList(list, phrase, typeOrTypes):
+	finalstring = ""
+	length = len(list)
+	i = 0
+	if (length > 0):
+		for t in list:
+			#we're at the end and only need a space
+			if (i + 1 == length):
+				comma = ""
+			#at the second to end and need an and
+			elif (i + 2 == length):
+				if (length > 2):
+					comma = ", and "
+				else:
+					comma = " and "
+			#else comma
+			else:
+				comma = ", "
+			finalstring += (t.color + str(t) + bcolors.ENDC + comma)
+			i = i + 1
+		if (len(typeOrTypes) == 1):
+			print finalstring + phrase + typeOrTypes[0].color + typeOrTypes[0].name + bcolors.ENDC
+		else:
+			print finalstring + phrase + typeOrTypes[0].color + typeOrTypes[0].name + bcolors.ENDC + " " + typeOrTypes[1].color + typeOrTypes[1].name + bcolors.ENDC
+
+########################################### END OF FUNCTIONS ###########################################
+
+
+
+############################################ BEGIN OF MAIN ############################################
 
 #good old main
 def main():
 	populateAllData()
-	possibleType = raw_input("Enter a Type or Types (in lower case, separated by spaces) or 'q' to quit: ")
+	promptPhrase = "Enter a Type or Types (in lower case, separated by spaces) or 'q' to quit: "
+	notFoundPhrase = "That was not a found type. Expected format: 'fire' or 'ice water'. Please try again: "
+	possibleType = raw_input(promptPhrase)
 	while(str(possibleType) != "q"):
 		userType = searchForType(possibleType)
 		#print "user type: " + str(userType)
 		if(userType[0] == 1):
 			printAllData(userType[1])
-			possibleType = raw_input("Enter a Type or Types (in lower case, separated by spaces) or 'q' to quit: ")
+			possibleType = raw_input(promptPhrase)
 		elif(userType[0] == 2):
 			printDoubleType(userType[1], userType[2])
-			possibleType = raw_input("Enter a Type or Types (in lower case, separated by spaces) or 'q' to quit: ")
+			possibleType = raw_input(promptPhrase)
 		else:
-			possibleType = raw_input("That was not a found type. Expected format: 'fire' or 'ice water'. Please try again: ")
+			possibleType = raw_input(notFoundPhrase)
 
 
 
